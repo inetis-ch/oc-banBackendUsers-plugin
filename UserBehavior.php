@@ -30,7 +30,7 @@ class UserBehavior extends ModelBehavior
         $loggedUser = AuthManager::instance()->getUser();
         $userId = $this->model->attributes['id'];
 
-        if ($loggedUser->id == $userId) {
+        if ($value && $loggedUser->id == $userId) {
             throw new \ApplicationException("You can't ban yourself");
         }
 
