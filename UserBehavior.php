@@ -9,7 +9,10 @@ class UserBehavior extends ModelBehavior
 
     public function getInetisIsBannedAttribute()
     {
-        $userId = $this->model->attributes['id'];
+        if (empty($userId = $this->model->attributes['id'] ?? null)) {
+            return;
+        }
+
         $throttle = AuthManager::instance()->findThrottleByUserId($userId, null);
 
         if (!empty($throttle) && $throttle->is_banned) {
@@ -28,7 +31,10 @@ class UserBehavior extends ModelBehavior
     public function setInetisIsBannedAttribute($value)
     {
         $loggedUser = AuthManager::instance()->getUser();
-        $userId = $this->model->attributes['id'];
+
+        if (empty($userId = $this->model->attributes['id'] ?? null)) {
+            return;
+        }
 
         if ($value && $loggedUser->id == $userId) {
             throw new \ApplicationException("You can't ban yourself");
